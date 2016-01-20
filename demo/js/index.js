@@ -6,18 +6,44 @@ var animLoop = false,
 
 
 // Reference of city lat / long points
+// var people = {
+//     "johnmurch": [{
+//         area: "Westfield, NJ",
+//         geo: [40.6589910, -74.3473720]
+//     }, {
+//         area: "Burlington, VT",
+//         geo: [44.4758820, -73.2120720]
+//     }, {
+//         area: "Brooklyn, NY",
+//         geo: [40.7030630, -73.9904600]
+//     }]
+// }
+
 var people = {
-    "johnmurch": [{
-        area: "Westfield, NJ",
-        geo: [40.6589910, -74.3473720]
-    }, {
-        area: "Burlington, VT",
-        geo: [44.4758820, -73.2120720]
-    }, {
-        area: "Brooklyn, NY",
-        geo: [40.7030630, -73.9904600]
-    }]
+    "johnmurch":[
+        {[40.6589910, -74.3473720]},
+        {[44.4758820, -73.2120720]},
+        {[40.7030630, -73.9904600]}
+    ]
 }
+
+
+// <option value="davidreyneke">David Reyneke</option>
+// <option value="biancacazares">Bianca Cazares</option>
+// <option value="mattvarghese">Matt Varghese</option>
+// <option value="poojahoffman">Pooja Hoffman</option>
+// <option value="sarahluvisi">Sarah Luvisi</option>
+// <option value="johnmurch">John Murch</option>
+// <option value="joseramos">Jose Ramos</option>
+// <option value="jamesmcnally">James McNally</option>
+// <option value="john-davidbrown">John-David Brown</option>
+// <option value="mikedomingo">Mike Domingo</option>
+// <option value="calebthill">Caleb Thill</option>
+
+
+
+
+
 var places = {
     "westfield": [40.6589910, -74.3473720],
     "burlington": [44.4758820, -73.2120720],
@@ -118,9 +144,13 @@ var planeSymbol = {
 function trip(person, connection) {
 		console.log(person);
 		//@todo - change out hardcoded
-		startPoint = places["westfield"],
-		midPoint = places["burlington"],
-		endPoint = places["brooklyn"]
+        startPoint = people[person][0],
+        midPoint = people[person][1],
+        endPoint = people[person][2]
+
+		// startPoint = places["westfield"],
+		// midPoint = places["burlington"],
+		// endPoint = places["brooklyn"]
         // Convert the points arrays into Lat / Lng objects
     var sP = new google.maps.LatLng(startPoint[0], startPoint[1]);
     var mP = new google.maps.LatLng(midPoint[0], midPoint[1]);

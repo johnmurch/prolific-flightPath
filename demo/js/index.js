@@ -3,53 +3,65 @@ var animLoop = false,
     animIndex = 0,
     planePath = false,
     trailPath = false;
-
-
-// Reference of city lat / long points
-// var people = {
-//     "johnmurch": [{
-//         area: "Westfield, NJ",
-//         geo: [40.6589910, -74.3473720]
-//     }, {
-//         area: "Burlington, VT",
-//         geo: [44.4758820, -73.2120720]
-//     }, {
-//         area: "Brooklyn, NY",
-//         geo: [40.7030630, -73.9904600]
-//     }]
-// }
-
+//Team members and geolocations
 var people = {
-    "johnmurch":[
-        {[40.6589910, -74.3473720]},
-        {[44.4758820, -73.2120720]},
-        {[40.7030630, -73.9904600]}
-    ]
-}
-
-
-// <option value="davidreyneke">David Reyneke</option>
-// <option value="biancacazares">Bianca Cazares</option>
-// <option value="mattvarghese">Matt Varghese</option>
-// <option value="poojahoffman">Pooja Hoffman</option>
-// <option value="sarahluvisi">Sarah Luvisi</option>
-// <option value="johnmurch">John Murch</option>
-// <option value="joseramos">Jose Ramos</option>
-// <option value="jamesmcnally">James McNally</option>
-// <option value="john-davidbrown">John-David Brown</option>
-// <option value="mikedomingo">Mike Domingo</option>
-// <option value="calebthill">Caleb Thill</option>
-
-
-
-
-
-var places = {
-    "westfield": [40.6589910, -74.3473720],
-    "burlington": [44.4758820, -73.2120720],
-    "brooklyn": [40.7030630, -73.9904600]
-};
-// Set up a google maps object with disabled user interaction (no zoom, no pan etc.)
+        "davidreyneke": [
+            [41.0632, -74.1000],
+            [41.1815, -73.2903],
+            [40.7030630, -73.9904600]
+        ],
+        "biancacazares": [
+            [37.3382,-121.8863],
+            [40.73, -73.995],
+            [40.7030630, -73.9904600]
+        ],
+        "mattvarghese": [
+            [42.3833, -71.4167],
+            [40.7030630, -73.9904600],
+            [40.7030630, -73.9904600]
+        ],
+        "poojahoffman": [
+            [41.0111000,-73.9133000],
+            [42.2982, -71.2612],
+            [40.7030630, -73.9904600]
+        ],
+        "sarahluvisi": [
+            [38.2500000,-85.7667000],
+            [36.135,-80.277],
+            [40.7030630, -73.9904600]
+        ],
+        "johnmurch": [
+            [40.6589910, -74.3473720],
+            [44.4758820, -73.2120720],
+            [40.7030630, -73.9904600]
+        ],
+        "joseramos": [
+            [18.45,-66.1000],
+            [18.2094, -67.1417],
+            [40.7030630, -73.9904600]
+        ],
+        "jamesmcnally": [
+            [42.3333, -72.6500],
+            [42.367, -72.517],
+            [40.7030630, -73.9904600]
+        ],
+        "john-davidbrown": [
+            [37.7917, -120.9917],
+            [42.4433, -76.5],
+            [40.7030630, -73.9904600]
+        ],
+        "mikedomingo": [
+            [40.212, -74.4322],
+            [49.2827, -123.1207],
+            [40.7030630, -73.9904600]
+        ],
+        "calebthill": [
+            [39.0997, -94.5783],
+            [39.0997, -94.5783],
+            [40.7030630, -73.9904600]
+        ]
+    }
+    // Set up a google maps object with disabled user interaction (no zoom, no pan etc.)
 function loadMap() {
     var options = {
         draggable: false,
@@ -142,87 +154,80 @@ var planeSymbol = {
 };
 
 function trip(person, connection) {
-		console.log(person);
-		//@todo - change out hardcoded
-        startPoint = people[person][0],
-        midPoint = people[person][1],
-        endPoint = people[person][2]
+    var startPoint = people[person][0],
+    midPoint = people[person][1],
+    endPoint = people[person][2];
 
-		// startPoint = places["westfield"],
-		// midPoint = places["burlington"],
-		// endPoint = places["brooklyn"]
-        // Convert the points arrays into Lat / Lng objects
     var sP = new google.maps.LatLng(startPoint[0], startPoint[1]);
     var mP = new google.maps.LatLng(midPoint[0], midPoint[1]);
     var eP = new google.maps.LatLng(endPoint[0], endPoint[1]);
     // Create a polyline for the planes path
-    console.log("CONNECTION: "+connection)
-    if(connection){
-	    planePath = new google.maps.Polyline({
-	        path: [sP, mP],
-	        strokeColor: '#0f0',
-	        strokeWeight: 0,
-	        icons: [{
-	            icon: planeSymbol,
-	            offset: '0%'
-	        }],
-	        map: mapObject,
-	        geodesic: true
-	    });
-	    trailPath = new google.maps.Polyline({
-	        path: [sP, sP],
-	        strokeColor: '#2eacd0',
-	        strokeWeight: 2,
-	        map: mapObject,
-	        geodesic: true
-	    });   
-    }else{
-  	    planePath = new google.maps.Polyline({
-	        path: [mP, eP],
-	        strokeColor: '#0f0',
-	        strokeWeight: 0,
-	        icons: [{
-	            icon: planeSymbol,
-	            offset: '0%'
-	        }],
-	        map: mapObject,
-	        geodesic: true
-	    });
-	    trailPath = new google.maps.Polyline({
-	        path: [mP, mP],
-	        strokeColor: '#2eacd0',
-	        strokeWeight: 2,
-	        map: mapObject,
-	        geodesic: true
-	    }); 	
+    // console.log("CONNECTION: " + connection)
+    if (connection) {
+        planePath = new google.maps.Polyline({
+            path: [sP, mP],
+            strokeColor: '#0f0',
+            strokeWeight: 0,
+            icons: [{
+                icon: planeSymbol,
+                offset: '0%'
+            }],
+            map: mapObject,
+            geodesic: true
+        });
+        trailPath = new google.maps.Polyline({
+            path: [sP, sP],
+            strokeColor: '#2eacd0',
+            strokeWeight: 2,
+            map: mapObject,
+            geodesic: true
+        });
+    } else {
+        planePath = new google.maps.Polyline({
+            path: [mP, eP],
+            strokeColor: '#0f0',
+            strokeWeight: 0,
+            icons: [{
+                icon: planeSymbol,
+                offset: '0%'
+            }],
+            map: mapObject,
+            geodesic: true
+        });
+        trailPath = new google.maps.Polyline({
+            path: [mP, mP],
+            strokeColor: '#2eacd0',
+            strokeWeight: 2,
+            map: mapObject,
+            geodesic: true
+        });
     }
     animLoop = window.requestAnimationFrame(function() {
-        flightPath(sP, mP, eP, connection);
+        flightPath(person, sP, mP, eP, connection);
     });
 }
 
 function addLine() {
-  trailPath.setMap(map);
+    trailPath.setMap(map);
 }
 
 function clearMap() {
-	// mapObject.setCenter(new google.maps.LatLng(39.5, -98.3))
-	// mapObject.setZoom(4);
-	// planePath.setMap(null);
- 	// trailPath.setMap(null);
-	window.location.reload()
+    // mapObject.setCenter(new google.maps.LatLng(39.5, -98.3))
+    // mapObject.setZoom(4);
+    // planePath.setMap(null);
+    // trailPath.setMap(null);
+    window.location.reload()
 }
 
-function flightPath(startPoint, midPoint, endPoint, layover) {
+function flightPath(person, startPoint, midPoint, endPoint, layover) {
     animIndex += 1;
     // Draw trail
-
-    if(layover){
-	    var nextPoint = google.maps.geometry.spherical.interpolate(startPoint, midPoint, animIndex / 100);
-	    trailPath.setPath([startPoint, nextPoint]);    	
-    }else{
-	    var nextPoint = google.maps.geometry.spherical.interpolate(midPoint, endPoint, animIndex / 100);
-	    trailPath.setPath([midPoint, nextPoint]);
+    if (layover) {
+        var nextPoint = google.maps.geometry.spherical.interpolate(startPoint, midPoint, animIndex / 100);
+        trailPath.setPath([startPoint, nextPoint]);
+    } else {
+        var nextPoint = google.maps.geometry.spherical.interpolate(midPoint, endPoint, animIndex / 100);
+        trailPath.setPath([midPoint, nextPoint]);
     }
     // Move the plane
     planePath.icons[0].offset = Math.min(animIndex, 100) + '%';
@@ -233,50 +238,14 @@ function flightPath(startPoint, midPoint, endPoint, layover) {
     if (animIndex >= 100) {
         window.cancelAnimationFrame(animLoop);
         animIndex = 0;
-        console.log("LAYOVER"+layover)
-        if(layover){
-	        trip("johnmurch", false);
-        }else{
-	        console.log("DONE");
+        if (layover) {
+            trip(person, false);
+        } else {
+            // console.log("DONE");
         }
     } else {
         animLoop = window.requestAnimationFrame(function() {
-            flightPath(startPoint, midPoint, endPoint, layover);
-        });
-    }
-}
-
-
-function flight(startPoint, midPoint, endPoint, status) {
-    animIndex += 1;
-    // Draw trail
-
-    var nextPoint = google.maps.geometry.spherical.interpolate(startPoint, midPoint, animIndex / 100);
-    trailPath.setPath([startPoint, nextPoint]);
-
-    // Move the plane
-    planePath.icons[0].offset = Math.min(animIndex, 100) + '%';
-    planePath.setPath(planePath.getPath());
-    // Ensure the plane is in the center of the screen
-    mapObject.panTo(nextPoint);
-    // We've reached the end, clear animLoop
-    if (animIndex >= 100) {
-        window.cancelAnimationFrame(animLoop);
-        animIndex = 0;
-        console.log("DONE");
-        console.log(status);
-        if(status!=1){
-	        animate2("johnmurch");
-        }
-	    // window.cancelAnimationFrame(animLoop);
-	    // animIndex = 0;
-	    // animate(document.getElementById('person').options[document.getElementById('person').selectedIndex].value,1
-	    //     // 		document.getElementById('s_from').options[document.getElementById('s_from').selectedIndex].value,
-	    //     // 		document.getElementById('s_to').options[document.getElementById('s_to').selectedIndex].value
-	    // );        
-    } else {
-        animLoop = window.requestAnimationFrame(function() {
-            flight(startPoint, midPoint, endPoint, status);
+            flightPath(person, startPoint, midPoint, endPoint, layover);
         });
     }
 }
@@ -285,17 +254,6 @@ function flight(startPoint, midPoint, endPoint, status) {
 function go() {
     window.cancelAnimationFrame(animLoop);
     animIndex = 0;
-    trip(document.getElementById('person').options[document.getElementById('person').selectedIndex].value, true
-        // 		document.getElementById('s_from').options[document.getElementById('s_from').selectedIndex].value,
-        // 		document.getElementById('s_to').options[document.getElementById('s_to').selectedIndex].value
-    );
-
-    // animate(document.getElementById('person').options[document.getElementById('person').selectedIndex].value
-    //     // 		document.getElementById('s_from').options[document.getElementById('s_from').selectedIndex].value,
-    //     // 		document.getElementById('s_to').options[document.getElementById('s_to').selectedIndex].value
-    // );
+    trip(document.getElementById('person').options[document.getElementById('person').selectedIndex].value, true);
 }
-
-
-
 loadMap();

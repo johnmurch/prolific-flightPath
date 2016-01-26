@@ -176,6 +176,7 @@ h1 {
 }
 
 .overlay ul li {
+    margin-top:37px;
     float: left;
     display: block;
     height: 25%;

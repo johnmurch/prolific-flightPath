@@ -57,7 +57,7 @@ var people = {
             [40.7030630, -73.9904600]
         ],
         "calebthill": [
-            [39.0997, -94.5783],
+            [21.9686110,-159.3994440],
             [39.0997, -94.5783],
             [40.7030630, -73.9904600]
         ]
@@ -229,7 +229,7 @@ function addLine() {
 
 function overviewMap() {
     mapObject.setCenter(new google.maps.LatLng(39.5, -98.3))
-    mapObject.setZoom(4);
+    mapObject.setZoom(3);
 }
 
 function goHome() {

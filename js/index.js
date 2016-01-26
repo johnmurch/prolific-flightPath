@@ -2,7 +2,8 @@
 var animLoop = false,
     animIndex = 0,
     planePath = false,
-    trailPath = false;
+    trailPath = false,
+    flightFinished = true;
 //Team members and geolocations
 var people = {
         "davidreyneke": [
@@ -50,6 +51,11 @@ var people = {
             [42.4433, -76.5],
             [40.7030630, -73.9904600]
         ],
+        "brianokpala": [
+            [33.755, -84.39],
+            [33.7528, -84.3861],
+            [40.7030630, -73.9904600]
+        ],
         "calebthill": [
             [39.0997, -94.5783],
             [39.0997, -94.5783],
@@ -66,8 +72,8 @@ function loadMap() {
         scaleControl: false,
         disableDefaultUI: true,
         disableDoubleClickZoom: true,
-        zoom: 7,
-        center: new google.maps.LatLng(41.850033, -87.6500523),
+        zoom: 15,
+        center: new google.maps.LatLng(40.7030630, -73.9904600),
         styles: [{
             "featureType": "administrative",
             "stylers": [{
@@ -149,13 +155,24 @@ var planeSymbol = {
 };
 
 function trip(person, connection) {
+    flightFinished=false;
+    //Fix Zoom on Each Trip
+    mapObject.setZoom(7);
+
     var startPoint = people[person][0],
     midPoint = people[person][1],
     endPoint = people[person][2];
 
+    //set first leg of trip (sp,mp) then second leg (mp,ep)
     var sP = new google.maps.LatLng(startPoint[0], startPoint[1]);
     var mP = new google.maps.LatLng(midPoint[0], midPoint[1]);
     var eP = new google.maps.LatLng(endPoint[0], endPoint[1]);
+
+    //readjust map if first leg of trip
+    if(connection){
+        mapObject.panTo(sP);
+    }
+
     // Create a polyline for the planes path
     // console.log("CONNECTION: " + connection)
     if (connection) {
@@ -206,9 +223,12 @@ function addLine() {
     trailPath.setMap(map);
 }
 
+function overviewMap() {
+    mapObject.setCenter(new google.maps.LatLng(39.5, -98.3))
+    mapObject.setZoom(4);
+}
+
 function clearMap() {
-    // mapObject.setCenter(new google.maps.LatLng(39.5, -98.3))
-    // mapObject.setZoom(4);
     // planePath.setMap(null);
     // trailPath.setMap(null);
     window.location.reload()
@@ -236,6 +256,11 @@ function flightPath(person, startPoint, midPoint, endPoint, layover) {
         if (layover) {
             trip(person, false);
         } else {
+            $("#boardingpass").empty("");
+            //if flightfinished? 
+            $("#toggle").show();
+
+            flightFinished=true;
             // console.log("DONE");
         }
     } else {
@@ -245,10 +270,92 @@ function flightPath(person, startPoint, midPoint, endPoint, layover) {
     }
 }
 
+function allAboard(){
+    //hide overlay
+    $( "#toggle" ).trigger( "click" );
+    //hide p
+    $("#toggle").hide();
+
+    window.cancelAnimationFrame(animLoop);
+    animIndex = 0;
+    var prolificp = [
+        "davidreyneke",
+        "biancacazares",
+        "mattvarghese",
+        "poojahoffman",
+        "sarahluvisi",
+        "johnmurch",
+        "joseramos",
+        "jamesmcnally",
+        "john-davidbrown",
+        "brianokpala",
+        "calebthill"
+    ]
+    var prolificpIndex = 0;
+    //relative image path
+    var tmpURL = "http://"+ location.hostname +window.location.pathname.replace("index.html","");
+    //update with prolific image
+    $("#boardingpass").empty().html('<img class="img-circle" src="'+tmpURL+'/images/' + prolificp[prolificpIndex] + '.jpg">');
+    trip(prolificp[prolificpIndex],true);
+    setInterval(function(){
+        if(flightFinished){
+            if(prolificpIndex == prolificp.length){
+                flightFinished=true;
+                $("#toggle").show();
+            } else {
+                prolificpIndex++;
+                //hide if shown
+                $("#toggle").hide();
+    
+                if(prolificp[prolificpIndex] !=undefined){
+                    $("#boardingpass").empty().html('<img class="img-circle" src="'+tmpURL+'/images/' + prolificp[prolificpIndex] + '.jpg">');
+                }
+                trip(prolificp[prolificpIndex],true);
+            }            
+        }else{
+            $("#toggle").hide();
+        }
+    }, 100);
+    // $.each(prolificp, function (index, value) {
+    //     console.log(value);
+    //     // animLoop = window.requestAnimationFrame(function() {
+    //     //     trip(value, true);
+    //     // });
+    // });
+}
+
 // Get values from select boxes, run the animation.
 function go() {
     window.cancelAnimationFrame(animLoop);
     animIndex = 0;
     trip(document.getElementById('person').options[document.getElementById('person').selectedIndex].value, true);
 }
+
+function board(person) {
+    //hide overlay
+    $("#toggle" ).trigger("click");
+
+    //Init Animation
+    window.cancelAnimationFrame(animLoop);
+    animIndex = 0;
+
+    //relative image path
+    var tmpURL = "http://"+ location.hostname +window.location.pathname.replace("index.html","");
+
+    //update with prolific image
+    if(person !=undefined){
+        $("#boardingpass").empty().html('<img class="img-circle" src="'+tmpURL+'/images/' + person + '.jpg">');
+    }
+
+    //hide the main P logo until finished
+    $("#toggle").hide();
+
+    trip(person, true);
+}
+
 loadMap();
+
+$('#toggle').click(function() {
+    $(this).toggleClass('active');
+    $('#overlay').toggleClass('open');
+});

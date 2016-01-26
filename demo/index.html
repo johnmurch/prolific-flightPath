@@ -9,9 +9,16 @@
         <html>
             <head>
                 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
+                <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
             </head>
-            <body><div class="controls">
-                <select id="person" onChange="go();">
+            <body>
+            <div class="controls">
+            <div class="worldview" onClick="overviewMap();"><i class="fa fa-globe fa-5x"></i></div>
+            <div class="gotolocation" onClick="clearMap();"><i class="fa fa-location-arrow fa-5x"></i></div>
+            <div id="boardingpass"></div>
+            <div class="button_container" id="toggle"><img class="logo" src="images/prolific-interactive-logo-small.png"></div>
+<!--                 <select id="person" onChange="go();">
                     <option value="davidreyneke">David Reyneke</option>
                     <option value="biancacazares">Bianca Cazares</option>
                     <option value="mattvarghese">Matt Varghese</option>
@@ -21,17 +28,36 @@
                     <option value="joseramos">Jose Ramos</option>
                     <option value="jamesmcnally">James McNally</option>
                     <option value="john-davidbrown">John-David Brown</option>
+                    <option value="brianokpala">Brian Okpala</option>
                     <option value="calebthill">Caleb Thill</option>
                 </select>
                 <button type="button" onClick="go();">Go</button>
-                <button type="button" onClick="clearMap();">CLEAR</button>
+                <button type="button" onClick="overviewMap();">Overview</button>
+                <button type="button" onClick="clearMap();">CLEAR</button> -->
             </div>
             <div id="mapCanvas" class="map"></div>
+            <div class="overlay" id="overlay">
+              <nav class="overlay-menu">
+                <ul>
+                    <li><img src="images/davidreyneke.jpg" onclick="board('davidreyneke')" title="David Reyneke"></li>
+                    <li><img src="images/biancacazares.jpg" onclick="board('biancacazares')" title="Bianca Cazares"></li>
+                    <li><img src="images/mattvarghese.jpg" onclick="board('mattvarghese')" title="Matt Varghese"></li>
+                    <li><img src="images/poojahoffman.jpg" onclick="board('poojahoffman')" title="Pooja Hoffman"></li>
+                    <li><img src="images/sarahluvisi.jpg" onclick="board('sarahluvisi')" title="Sarah Luvisi"></li>
+                    <li><img src="images/johnmurch.jpg" onclick="board('johnmurch')" title="John Murch"></li>
+                    <li><img src="images/joseramos.jpg" onclick="board('joseramos')" title="Jose Ramos"></li>
+                    <li><img src="images/jamesmcnally.jpg" onclick="board('jamesmcnally')" title="James McNally"></li>
+                    <li><img src="images/john-davidbrown.jpg" onclick="board('john-davidbrown')" title="John-David Brown"></li>
+                    <li><img src="images/brianokpala.jpg" onclick="board('brianokpala')" title="Brian Okpala"></li>
+                    <li><img src="images/calebthill.jpg" onclick="board('calebthill')" title="Caleb Thill"></li>
+                </ul>
+                <ul style="margin-top:-100px;clear:both;">
+                    <li><img src="images/p-team.jpg" onclick="allAboard()" title="New P's"></li>
+                </ul>
+              </nav>
+            </div>
         </body>
     </html>
     <script src="js/index.js"></script>
-    <!--     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-    <script src='https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js'></script>
-    <script src="js/carousel.js"></script> -->
 </body>
 </html>

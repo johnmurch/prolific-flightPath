@@ -50,11 +50,6 @@ var people = {
             [42.4433, -76.5],
             [40.7030630, -73.9904600]
         ],
-        "mikedomingo": [
-            [40.212, -74.4322],
-            [49.2827, -123.1207],
-            [40.7030630, -73.9904600]
-        ],
         "calebthill": [
             [39.0997, -94.5783],
             [39.0997, -94.5783],
@@ -254,6 +249,8 @@ function flightPath(person, startPoint, midPoint, endPoint, layover) {
 function go() {
     window.cancelAnimationFrame(animLoop);
     animIndex = 0;
+    //@todo - disable button
     trip(document.getElementById('person').options[document.getElementById('person').selectedIndex].value, true);
 }
+
 loadMap();

@@ -159,64 +159,68 @@ function trip(person, connection) {
     //Fix Zoom on Each Trip
     mapObject.setZoom(7);
 
-    var startPoint = people[person][0],
-    midPoint = people[person][1],
-    endPoint = people[person][2];
+    if(person!=undefined){
+        var startPoint = people[person][0],
+        midPoint = people[person][1],
+        endPoint = people[person][2];
 
-    //set first leg of trip (sp,mp) then second leg (mp,ep)
-    var sP = new google.maps.LatLng(startPoint[0], startPoint[1]);
-    var mP = new google.maps.LatLng(midPoint[0], midPoint[1]);
-    var eP = new google.maps.LatLng(endPoint[0], endPoint[1]);
+        //set first leg of trip (sp,mp) then second leg (mp,ep)
+        var sP = new google.maps.LatLng(startPoint[0], startPoint[1]);
+        var mP = new google.maps.LatLng(midPoint[0], midPoint[1]);
+        var eP = new google.maps.LatLng(endPoint[0], endPoint[1]);
 
-    //readjust map if first leg of trip
-    if(connection){
-        mapObject.panTo(sP);
+        //readjust map if first leg of trip
+        if(connection){
+            mapObject.panTo(sP);
+        }
+
+        // Create a polyline for the planes path
+        // console.log("CONNECTION: " + connection)
+        if (connection) {
+            planePath = new google.maps.Polyline({
+                path: [sP, mP],
+                strokeColor: '#0f0',
+                strokeWeight: 0,
+                icons: [{
+                    icon: planeSymbol,
+                    offset: '0%'
+                }],
+                map: mapObject,
+                geodesic: true
+            });
+            trailPath = new google.maps.Polyline({
+                path: [sP, sP],
+                strokeColor: '#2eacd0',
+                strokeWeight: 2,
+                map: mapObject,
+                geodesic: true
+            });
+        } else {
+            planePath = new google.maps.Polyline({
+                path: [mP, eP],
+                strokeColor: '#0f0',
+                strokeWeight: 0,
+                icons: [{
+                    icon: planeSymbol,
+                    offset: '0%'
+                }],
+                map: mapObject,
+                geodesic: true
+            });
+            trailPath = new google.maps.Polyline({
+                path: [mP, mP],
+                strokeColor: '#2eacd0',
+                strokeWeight: 2,
+                map: mapObject,
+                geodesic: true
+            });
+        }
+        animLoop = window.requestAnimationFrame(function() {
+            flightPath(person, sP, mP, eP, connection);
+        });
+    }else{
+        $("#toggle").show();        
     }
-
-    // Create a polyline for the planes path
-    // console.log("CONNECTION: " + connection)
-    if (connection) {
-        planePath = new google.maps.Polyline({
-            path: [sP, mP],
-            strokeColor: '#0f0',
-            strokeWeight: 0,
-            icons: [{
-                icon: planeSymbol,
-                offset: '0%'
-            }],
-            map: mapObject,
-            geodesic: true
-        });
-        trailPath = new google.maps.Polyline({
-            path: [sP, sP],
-            strokeColor: '#2eacd0',
-            strokeWeight: 2,
-            map: mapObject,
-            geodesic: true
-        });
-    } else {
-        planePath = new google.maps.Polyline({
-            path: [mP, eP],
-            strokeColor: '#0f0',
-            strokeWeight: 0,
-            icons: [{
-                icon: planeSymbol,
-                offset: '0%'
-            }],
-            map: mapObject,
-            geodesic: true
-        });
-        trailPath = new google.maps.Polyline({
-            path: [mP, mP],
-            strokeColor: '#2eacd0',
-            strokeWeight: 2,
-            map: mapObject,
-            geodesic: true
-        });
-    }
-    animLoop = window.requestAnimationFrame(function() {
-        flightPath(person, sP, mP, eP, connection);
-    });
 }
 
 function addLine() {
@@ -228,10 +232,12 @@ function overviewMap() {
     mapObject.setZoom(4);
 }
 
-function clearMap() {
+function goHome() {
     // planePath.setMap(null);
     // trailPath.setMap(null);
-    window.location.reload()
+    // window.location.reload()
+    mapObject.setCenter(new google.maps.LatLng(40.7030630, -73.9904600))
+    mapObject.setZoom(15);
 }
 
 function flightPath(person, startPoint, midPoint, endPoint, layover) {
@@ -259,7 +265,6 @@ function flightPath(person, startPoint, midPoint, endPoint, layover) {
             $("#boardingpass").empty("");
             //if flightfinished? 
             $("#toggle").show();
-
             flightFinished=true;
             // console.log("DONE");
         }
@@ -313,15 +318,10 @@ function allAboard(){
                 trip(prolificp[prolificpIndex],true);
             }            
         }else{
-            $("#toggle").hide();
+            //keep the toggle hidden
+            //$("#toggle").hide();
         }
     }, 100);
-    // $.each(prolificp, function (index, value) {
-    //     console.log(value);
-    //     // animLoop = window.requestAnimationFrame(function() {
-    //     //     trip(value, true);
-    //     // });
-    // });
 }
 
 // Get values from select boxes, run the animation.
